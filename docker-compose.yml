@@ -1,0 +1,87 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: doctask
+    ports:
+      - "5432:5432"
+    volumes:
+      - doctask_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+  migrate:
+    build: ./backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment: &backend_env
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/doctask
+      DATABASE_URL_SYNC: postgresql://postgres:postgres@db:5432/doctask
+      DATABASE_URL_ALEMBIC: postgresql+psycopg://postgres:postgres@db:5432/doctask
+      LLM_PROVIDER: ${LLM_PROVIDER:-fake}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      API_KEY: ${API_KEY:-dev-local-key}
+    # Two separate schemas, two separate migration mechanisms, run
+    # sequentially in this single one-shot service: Alembic for the
+    # application tables, then the LangGraph checkpoint schema (see
+    # app/graph/checkpointer.py for why the latter has to run exactly
+    # once, here, rather than in api/worker/watcher at their own
+    # startup). `&&` means a failure in either stops the service with a
+    # non-zero exit, so api/worker/watcher's
+    # `depends_on: condition: service_completed_successfully` correctly
+    # never lets them start on a half-migrated database.
+    command: sh -c "alembic upgrade head && python -m app.graph.bootstrap_checkpointer"
+
+  api:
+    build: ./backend
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment: *backend_env
+    ports:
+      - "8000:8000"
+    volumes:
+      - doctask_uploads:/app/data/uploads
+
+  worker:
+    build: ./backend
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment: *backend_env
+    command: python -m app.workers.loop
+    volumes:
+      - doctask_uploads:/app/data/uploads
+
+  watcher:
+    build: ./backend
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment: *backend_env
+    command: python -m app.workers.watch_folder
+    volumes:
+      - doctask_uploads:/app/data/uploads
+      - doctask_watched:/app/data/watched
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: http://localhost:8000
+        VITE_API_KEY: ${API_KEY:-dev-local-key}
+    depends_on:
+      - api
+    ports:
+      - "5173:5173"
+
+volumes:
+  doctask_pgdata:
+  doctask_uploads:
+  doctask_watched:

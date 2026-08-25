@@ -1,0 +1,12 @@
+INVOICE
+
+Invoice Number: INV-1042
+Bill To: Beta Retail Client Inc.
+From: Acme Fulfillment Solutions LLC
+
+Description: Fulfillment services, January 2026 billing cycle.
+
+Amount Due: $10,250.00
+
+Remit payment to Acme Fulfillment Solutions LLC per the payment terms of
+the governing Vendor Services Agreement.

@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+/*
+  Design language for a document-review tool, not a marketing page.
+  The domain is legal/compliance document review, so the signature is a
+  "casefile" feel: warm paper surfaces, a hairline-ruled ledger for lists,
+  a serif for anything that names a document or a fact, monospace for
+  anything that's data (ids, timestamps, cost figures, status codes), and
+  a single oxblood accent reserved for primary actions and the one
+  component that matters most - the source-reference citation, which
+  echoes the red-pen mark of a document under review.
+*/
+
+@theme {
+  --font-display: "Source Serif 4", Georgia, serif;
+  --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --color-ink: #1c1b19;
+  --color-ink-soft: #55524a;
+  --color-ink-faint: #8a8678;
+
+  --color-paper: #fbfaf8;
+  --color-paper-raised: #f2f0e9;
+  --color-paper-sunken: #ece9df;
+
+  --color-rule: #ddd7c8;
+  --color-rule-strong: #c7c0ac;
+
+  --color-accent: #7a2e22;
+  --color-accent-hover: #601f16;
+  --color-accent-soft: #f3e4de;
+
+  --color-status-queued: #837e6d;
+  --color-status-running: #35618a;
+  --color-status-waiting: #a8752b;
+  --color-status-retry: #b5591d;
+  --color-status-completed: #3d6a49;
+  --color-status-failed: #a13327;
+
+  --color-decision-approved: #3d6a49;
+  --color-decision-rejected: #a13327;
+  --color-decision-pending: #a8752b;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+}
+
+::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+/* Hairline dividers throughout - the ledger feel - rather than heavy card borders. */
+.rule-list > * + * {
+  border-top: 1px solid var(--color-rule);
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+.animate-pulse-soft {
+  animation: pulse-soft 1.6s ease-in-out infinite;
+}

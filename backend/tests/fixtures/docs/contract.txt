@@ -1,0 +1,29 @@
+VENDOR SERVICES AGREEMENT
+
+This Vendor Services Agreement (the "Agreement") is entered into as of the
+Effective Date set forth below, between Acme Fulfillment Solutions LLC
+("Vendor") and Beta Retail Client Inc. ("Client").
+
+Effective date: January 15, 2026
+
+Section 1. Term and Payment.
+Payment terms are net 30 days from the date of invoice. Client shall remit
+payment in full within thirty (30) days of receipt of a valid invoice from
+Vendor.
+
+Section 2. Termination.
+Either party may terminate this Agreement by providing 60 days written
+notice to the other party. Termination shall not relieve either party of
+obligations accrued prior to the termination date.
+
+Section 3. Contract Value.
+The total contract value is $120,000.00 for the initial twelve-month term.
+
+Section 4. Indemnification.
+Vendor agrees to indemnify and hold harmless Client from third-party claims
+arising out of Vendor's gross negligence, provided that Vendor's aggregate
+indemnification liability under this Section shall not exceed $50,000.00.
+
+Section 5. Governing Law.
+This Agreement shall be governed by the laws of the State of Delaware,
+without regard to its conflict of laws principles.
